@@ -52,3 +52,7 @@ int main(int argc, char **argv)
 	puts(text_smem.get_cpu_ro());
 	return 0;
 }
+
+
+
+gdgd

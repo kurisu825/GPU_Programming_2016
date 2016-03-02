@@ -18,7 +18,7 @@ __global__ void SomeTransform(char *input_gpu, int fsize) {
 	for( i = idx; i < fsize; i += 32 ){
 		// 將全部字母修改為大寫英文字母A
 		if( input_gpu[i] != '\n' ){
-			input_gpu[idx] = 'A';
+			input_gpu[i] = 'A';
 		}
 	}
 }

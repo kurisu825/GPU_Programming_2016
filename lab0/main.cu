@@ -11,9 +11,15 @@
 }
 
 __global__ void SomeTransform(char *input_gpu, int fsize) {
-	int idx = blockIdx.x * blockDim.x + threadIdx.x;
-	if (idx < fsize and input_gpu[idx] != '\n') {
-		input_gpu[idx] = '!';
+	// thread ID 一律從 1 開始
+	int idx = threadIdx.x;
+	int i;
+	/// 32 thread 同時輪流執行
+	for( i = idx; i < fsize; i += 32 ){
+		// 將全部字母修改為大寫英文字母A
+		if( input_gpu[i] != '\n' ){
+			input_gpu[idx] = 'A';
+		}
 	}
 }
 
@@ -44,10 +50,8 @@ int main(int argc, char **argv)
 
 	// TODO: do your transform here
 	char *input_gpu = text_smem.get_gpu_rw();
-	// An example: transform the first 64 characters to '!'
-	// Don't transform over the tail
-	// And don't transform the line breaks
-	SomeTransform<<<2, 32>>>(input_gpu, fsize);
+	// 用 1 個block 和 32個thread 來處理字元
+	SomeTransform<<<1, 32>>>(input_gpu, fsize);
 
 	puts(text_smem.get_cpu_ro());
 	return 0;
@@ -55,4 +59,4 @@ int main(int argc, char **argv)
 
 
 
-gdgd
+
